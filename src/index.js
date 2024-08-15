@@ -1,6 +1,7 @@
 class Node {
   constructor(data, left, right) {
     this.data = data;
+    this.occurrences = data ? 1 : null;
     this.left = left;
     this.right = right;
   }
@@ -12,6 +13,7 @@ class Tree {
     this.sorted = this.mergeSort(arr);
     this.root = this.buildTree(this.sorted);
     this.prettyPrint(this.root);
+    console.log(this.levelOrderTraversal());
   }
   prettyPrint = (node, prefix = "", isLeft = true) => {
     if (node === null) {
@@ -57,6 +59,14 @@ class Tree {
     return sorted;
   };
 
+  levelOrderTraversal = (tree = this.root) => {
+    const order = [];
+
+    order.push(tree);
+    if (tree.left) order.push(this.levelOrderTraversal(tree.left));
+    if (tree.right) order.push(this.levelOrderTraversal(tree.right));
+    return order;
+  };
   buildTree = (arr) => {
     console.log(arr);
     let middle = Math.floor((arr.length - 1) / 2);
@@ -74,8 +84,39 @@ class Tree {
       return tree;
     }
   };
+
+  insert = (value) => {
+    let subtree = this.root;
+    let directions = [];
+    while (subtree) {
+      console.log("subtree: ", subtree);
+      if (subtree.data === value) {
+        subtree.occurrences += 1;
+        return;
+      } else if (subtree.data > value) {
+        subtree = subtree.left;
+        directions.push("left");
+      } else if (subtree.data < value) {
+        subtree = subtree.right;
+        directions.push("right");
+      }
+    }
+    subtree = this.root;
+    directions.forEach((dir) => {
+      if (!subtree[dir]) {
+        subtree[dir] = new Node(value, null, null);
+        return;
+      } else {
+        subtree = subtree[dir];
+      }
+    });
+  };
 }
 
-const arr = [2, 3, 1, 7, 6, 4, 5, 0, 10, 15, 26, 1];
+const arr = [2, 3, 1, 7, 6, 4, 5, 0, 10, 15, 26];
 const test = new Tree(arr);
 console.log(test);
+
+test.insert(20);
+test.insert(4);
+test.prettyPrint(test.root);
