@@ -1,7 +1,7 @@
 class Node {
-  constructor(data, left, right) {
+  constructor(data, left, right, occurrences = 1) {
     this.data = data;
-    this.occurrences = data ? 1 : null;
+    this.occurrences = data ? occurrences : null;
     this.left = left;
     this.right = right;
   }
@@ -11,7 +11,13 @@ class Tree {
   constructor(arr) {
     this.arr = arr;
     this.sorted = this.mergeSort(arr);
-    this.root = this.buildTree(this.sorted);
+    this.sortedOccurrences = this.getOccurrences(this.sorted);
+
+    console.log(this.sortedOccurrences);
+    console.log(this.sortedOccurrences[0][0]);
+    console.log(typeof this.sortedOccurrences[0][0]);
+
+    this.root = this.buildTree(this.sortedOccurrences);
     this.prettyPrint(this.root);
     console.log(this.levelOrderTraversal());
   }
@@ -67,22 +73,39 @@ class Tree {
     if (tree.right) order.push(this.levelOrderTraversal(tree.right));
     return order;
   };
+  // note: this uses the array with the number of duplicates
+  // it's an array of arrays
   buildTree = (arr) => {
     console.log(arr);
     let middle = Math.floor((arr.length - 1) / 2);
     let tree = null;
 
     if (arr.length === 1) {
-      return new Node(arr[middle], null, null);
+      return new Node(arr[middle][0], null, null, arr[middle][1]);
     } else if (arr.length === 0) {
       return new Node(null, null, null);
     } else {
+      console.log("inner array:", arr[middle]);
+      let [middleValue, occurrences] = arr[middle];
       let left = this.buildTree(arr.slice(0, middle));
       let right = this.buildTree(arr.slice(middle + 1));
       console.log("left", left, "right", right);
-      tree = new Node(arr[middle], left, right);
+      tree = new Node(middleValue, left, right, occurrences);
       return tree;
     }
+  };
+  getOccurrences = (arr) => {
+    let result = [];
+    let occurrences = 0;
+    for (let i = 0; i < arr.length; i++) {
+      occurrences = 1;
+      while (arr[i] === arr[i + 1]) {
+        occurrences += 1;
+        i += 1;
+      }
+      result.push([arr[i], occurrences]);
+    }
+    return result;
   };
 
   insert = (value) => {
@@ -113,7 +136,8 @@ class Tree {
   };
 }
 
-const arr = [2, 3, 1, 7, 6, 4, 5, 0, 10, 15, 26];
+//const arr = [2, 3, 1, 7, 6, 4, 5, 0, 10, 15, 26, 0];
+const arr = [4, 15, 3, 8, 5, 15, 26, 7, 0, 9, 6, 4];
 const test = new Tree(arr);
 console.log(test);
 
