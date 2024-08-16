@@ -170,27 +170,18 @@ class Tree {
         }
       } else if ((tree.left && !tree.right) || (!tree.left && tree.right)) {
         let child = tree.left ? tree.left : tree.right;
-        console.log("child:", child);
         this.swapNodes(tree, child);
         this.prettyPrint(prev);
         this.deleteItem(child.data, child, tree);
       } else {
         let left = tree.left;
-        let right = tree.right;
         console.log("left: ", left);
-        console.log("right: ", right);
-        if (!(prev === tree)) {
-          if (left.right) {
-            const inorderNode = this.findInorderNode(tree.left);
-            console.log("INORDER: ", inorderNode);
-            this.swapNodes(tree, inorderNode);
-            this.prettyPrint(prev);
-            this.deleteItem(value, left, tree);
-          } else {
-            this.swapNodes(tree, left);
-            this.prettyPrint(prev);
-            this.deleteItem(left.data, left, tree);
-          }
+        if (left.right) {
+          const inorderNode = this.findInorderNode(tree.left);
+          console.log("INDORDER: ", inorderNode);
+          this.swapNodes(tree, inorderNode);
+          this.prettyPrint(prev);
+          this.deleteItem(value, left, tree);
         } else {
           this.swapNodes(tree, left);
           this.prettyPrint(prev);
@@ -202,6 +193,14 @@ class Tree {
     } else {
       this.deleteItem(value, tree.right, tree);
     }
+  };
+
+  find = (value) => {
+    let current = this.root;
+    while (current.data !== value) {
+      current = current.data > value ? current.left : current.right;
+    }
+    return current;
   };
 }
 
@@ -235,3 +234,11 @@ deleteTest.prettyPrint(deleteTest.root);
 console.log("root");
 deleteTest.deleteItem(50);
 deleteTest.prettyPrint(deleteTest.root);
+
+// find test
+console.log("\nFIND TESTS");
+console.log(deleteTest.find(100));
+console.log(deleteTest.find(25));
+console.log(deleteTest.find(30));
+console.log(deleteTest.find(55));
+console.log(deleteTest.find(75));
