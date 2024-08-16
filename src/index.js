@@ -189,7 +189,7 @@ class Tree {
 
   find = (value) => {
     let current = this.root;
-    while (current.data !== value) {
+    while (current && current.data !== value) {
       current = current.data > value ? current.left : current.right;
     }
     return current;
@@ -279,6 +279,24 @@ class Tree {
     };
     f(this.root);
   };
+
+  height = (node) => {
+    if (!node || !this.find(node.data)) {
+      return "The node doesn't exist";
+      // throw new Error("The node doesn't exist");
+    }
+    let current = this.root;
+    let h = 0;
+    while (current !== node) {
+      h += 1;
+      if (current.data > node.data) {
+        current = current.left;
+      } else {
+        current = current.right;
+      }
+    }
+    return h;
+  };
 }
 
 //const arr = [2, 3, 1, 7, 6, 4, 5, 0, 10, 15, 26, 0];
@@ -298,15 +316,12 @@ console.log("\nDELETE TESTS:");
 // delete leaf
 console.log("leaf:");
 deleteTest.deleteItem(20);
-deleteTest.prettyPrint(deleteTest.root);
 // delete with 2 children
 console.log("2 children");
 deleteTest.deleteItem(70);
-deleteTest.prettyPrint(deleteTest.root);
 // delete with 1 child
 console.log("1 child");
 deleteTest.deleteItem(60);
-deleteTest.prettyPrint(deleteTest.root);
 // delete root
 console.log("root");
 deleteTest.deleteItem(50);
@@ -319,6 +334,7 @@ console.log(deleteTest.find(25));
 console.log(deleteTest.find(30));
 console.log(deleteTest.find(55));
 console.log(deleteTest.find(75));
+console.log(deleteTest.find(40));
 
 // levelOrderTraversal
 console.log("\nLEVEL ORDER TRAVERSAL");
@@ -340,3 +356,13 @@ deleteTest.prettyPrint(deleteTest.root);
 console.log("\nPOSTORDER TRAVERSAL");
 deleteTest.postorderTraversal(call);
 deleteTest.prettyPrint(deleteTest.root);
+
+// height
+console.log("\nHEIGHT TEST");
+console.log(deleteTest.root);
+console.log(deleteTest.find(45));
+console.log("height node 45: ", deleteTest.height(deleteTest.find(45)));
+console.log("height node 55: ", deleteTest.height(deleteTest.find(55)));
+console.log("height node 105: ", deleteTest.height(deleteTest.find(105)));
+console.log("height node 31: ", deleteTest.height(deleteTest.find(31)));
+console.log("height node 60: ", deleteTest.height(deleteTest.find(60)));
