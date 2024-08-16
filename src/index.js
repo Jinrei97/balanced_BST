@@ -280,7 +280,9 @@ class Tree {
     f(this.root);
   };
 
-  height = (node) => {
+  height = (node) => {};
+
+  depth = (node) => {
     if (!node || !this.find(node.data)) {
       return "The node doesn't exist";
       // throw new Error("The node doesn't exist");
@@ -357,12 +359,12 @@ console.log("\nPOSTORDER TRAVERSAL");
 deleteTest.postorderTraversal(call);
 deleteTest.prettyPrint(deleteTest.root);
 
-// height
-console.log("\nHEIGHT TEST");
+// depth
+console.log("\nDEPTH TEST");
 console.log(deleteTest.root);
 console.log(deleteTest.find(45));
-console.log("height node 45: ", deleteTest.height(deleteTest.find(45)));
-console.log("height node 55: ", deleteTest.height(deleteTest.find(55)));
-console.log("height node 105: ", deleteTest.height(deleteTest.find(105)));
-console.log("height node 31: ", deleteTest.height(deleteTest.find(31)));
-console.log("height node 60: ", deleteTest.height(deleteTest.find(60)));
+console.log("depth node 45: ", deleteTest.depth(deleteTest.find(45)));
+console.log("depth node 55: ", deleteTest.depth(deleteTest.find(55)));
+console.log("depth node 105: ", deleteTest.depth(deleteTest.find(105)));
+console.log("depth node 31: ", deleteTest.depth(deleteTest.find(31)));
+console.log("depth node 60: ", deleteTest.depth(deleteTest.find(60)));
