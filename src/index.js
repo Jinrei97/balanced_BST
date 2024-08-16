@@ -65,14 +65,37 @@ class Tree {
     return sorted;
   };
 
-  levelOrderTraversal = (tree = this.root) => {
-    const order = [];
+  levelOrderTraversal = (callback) => {
+    if (!callback) {
+      console.log("No callback provided");
+      return;
+    }
+    const queue = [];
+    let current = this.root;
+    callback(current);
+    if (current.left) queue.push(current.left);
+    if (current.right) queue.push(current.right);
 
-    order.push(tree);
-    if (tree.left) order.push(this.levelOrderTraversal(tree.left));
-    if (tree.right) order.push(this.levelOrderTraversal(tree.right));
-    return order;
+    while (queue.length > 0) {
+      current = queue.shift();
+      if (current.left) queue.push(current.left);
+      if (current.right) queue.push(current.right);
+      callback(current);
+    }
   };
+  levelOrderTraversalRecursive = (callback, current = this.root) => {
+    const queue = [];
+    const f = (node) => {
+      callback(node);
+      if (node.left) queue.push(node.left);
+      if (node.right) queue.push(node.right);
+    };
+    f(current);
+    while (queue.length > 0) {
+      f(queue.shift());
+    }
+  };
+
   // note: this uses the array with the number of duplicates
   // it's an array of arrays
   buildTree = (arr) => {
@@ -242,3 +265,12 @@ console.log(deleteTest.find(25));
 console.log(deleteTest.find(30));
 console.log(deleteTest.find(55));
 console.log(deleteTest.find(75));
+
+// levelOrderTraversal
+console.log("\nLEVEL ORDER TRAVERSAL");
+const call = (node) => (node.data += 1);
+deleteTest.levelOrderTraversal(call);
+deleteTest.prettyPrint(deleteTest.root);
+//recursive
+deleteTest.levelOrderTraversalRecursive(call);
+deleteTest.prettyPrint(deleteTest.root);
