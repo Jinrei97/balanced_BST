@@ -19,7 +19,6 @@ class Tree {
 
     this.root = this.buildTree(this.sortedOccurrences);
     this.prettyPrint(this.root);
-    console.log(this.levelOrderTraversal());
   }
   prettyPrint = (node, prefix = "", isLeft = true) => {
     if (node === null) {
@@ -196,7 +195,7 @@ class Tree {
   };
 
   // traversals
-  levelOrderTraversal = (callback) => {
+  levelOrderTraversal = (callback, tree = this.root) => {
     if (!callback) {
       console.log("No callback provided");
       return;
@@ -207,12 +206,13 @@ class Tree {
       if (node.left) queue.push(node.left);
       if (node.right) queue.push(node.right);
     };
-    let current = this.root;
+    let current = tree;
     f(current);
     while (queue.length > 0) {
       current = queue.shift();
       f(current);
     }
+    return current;
   };
   levelOrderTraversalRecursive = (
     callback,
@@ -280,7 +280,15 @@ class Tree {
     f(this.root);
   };
 
-  height = (node) => {};
+  height = (node) => {
+    if (!node || !this.find(node.data)) {
+      return "The node doesn't exist";
+      // throw new Error("The node doesn't exist");
+    }
+    let current = node;
+    const farthestLeaf = this.levelOrderTraversal((n) => {}, current);
+    return this.depth(farthestLeaf) - this.depth(current);
+  };
 
   depth = (node) => {
     if (!node || !this.find(node.data)) {
@@ -358,6 +366,19 @@ deleteTest.prettyPrint(deleteTest.root);
 console.log("\nPOSTORDER TRAVERSAL");
 deleteTest.postorderTraversal(call);
 deleteTest.prettyPrint(deleteTest.root);
+
+deleteTest.insert(75);
+deleteTest.prettyPrint(deleteTest.root);
+
+// height
+console.log("\nHEIGHT TEST");
+console.log(deleteTest.root);
+console.log(deleteTest.find(45));
+console.log("height node 45: ", deleteTest.height(deleteTest.find(45)));
+console.log("height node 55: ", deleteTest.height(deleteTest.find(55)));
+console.log("height node 105: ", deleteTest.height(deleteTest.find(105)));
+console.log("height node 31: ", deleteTest.height(deleteTest.find(31)));
+console.log("height node 60: ", deleteTest.height(deleteTest.find(60)));
 
 // depth
 console.log("\nDEPTH TEST");
