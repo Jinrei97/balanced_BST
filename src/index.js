@@ -65,37 +65,6 @@ class Tree {
     return sorted;
   };
 
-  levelOrderTraversal = (callback) => {
-    if (!callback) {
-      console.log("No callback provided");
-      return;
-    }
-    const queue = [];
-    let current = this.root;
-    callback(current);
-    if (current.left) queue.push(current.left);
-    if (current.right) queue.push(current.right);
-
-    while (queue.length > 0) {
-      current = queue.shift();
-      if (current.left) queue.push(current.left);
-      if (current.right) queue.push(current.right);
-      callback(current);
-    }
-  };
-  levelOrderTraversalRecursive = (callback, current = this.root) => {
-    const queue = [];
-    const f = (node) => {
-      callback(node);
-      if (node.left) queue.push(node.left);
-      if (node.right) queue.push(node.right);
-    };
-    f(current);
-    while (queue.length > 0) {
-      f(queue.shift());
-    }
-  };
-
   // note: this uses the array with the number of duplicates
   // it's an array of arrays
   buildTree = (arr) => {
@@ -225,6 +194,91 @@ class Tree {
     }
     return current;
   };
+
+  // traversals
+  levelOrderTraversal = (callback) => {
+    if (!callback) {
+      console.log("No callback provided");
+      return;
+    }
+    const queue = [];
+    const f = (node) => {
+      callback(node);
+      if (node.left) queue.push(node.left);
+      if (node.right) queue.push(node.right);
+    };
+    let current = this.root;
+    f(current);
+    while (queue.length > 0) {
+      current = queue.shift();
+      f(current);
+    }
+  };
+  levelOrderTraversalRecursive = (
+    callback,
+    current = this.root,
+    queue = []
+  ) => {
+    if (!callback) {
+      console.log("No callback provided");
+      return;
+    }
+    callback(current);
+    if (current.left) queue.push(current.left);
+    if (current.right) queue.push(current.right);
+    if (current !== this.root) {
+      return queue;
+    } else {
+      while (queue.length > 0) {
+        this.levelOrderTraversalRecursive(callback, queue.shift()).forEach(
+          (node) => {
+            queue.push(node);
+          }
+        );
+      }
+    }
+  };
+
+  // depth first:
+  preorderTraversal = (callback) => {
+    if (!callback) {
+      console.log("No callback provided");
+      return;
+    }
+    const f = (node) => {
+      console.log(node);
+      callback(node);
+      if (node.left) f(node.left);
+      if (node.right) f(node.right);
+    };
+    f(this.root);
+  };
+  inorderTraversal = (callback) => {
+    if (!callback) {
+      console.log("No callback provided");
+      return;
+    }
+    const f = (node) => {
+      if (node.left) f(node.left);
+      console.log(node);
+      callback(node);
+      if (node.right) f(node.right);
+    };
+    f(this.root);
+  };
+  postorderTraversal = (callback) => {
+    if (!callback) {
+      console.log("No callback provided");
+      return;
+    }
+    const f = (node) => {
+      if (node.left) f(node.left);
+      if (node.right) f(node.right);
+      console.log(node);
+      callback(node);
+    };
+    f(this.root);
+  };
 }
 
 //const arr = [2, 3, 1, 7, 6, 4, 5, 0, 10, 15, 26, 0];
@@ -271,6 +325,18 @@ console.log("\nLEVEL ORDER TRAVERSAL");
 const call = (node) => (node.data += 1);
 deleteTest.levelOrderTraversal(call);
 deleteTest.prettyPrint(deleteTest.root);
-//recursive
+// recursive
 deleteTest.levelOrderTraversalRecursive(call);
+deleteTest.prettyPrint(deleteTest.root);
+// preorder
+console.log("\nPREORDER TRAVERSAL");
+deleteTest.preorderTraversal(call);
+deleteTest.prettyPrint(deleteTest.root);
+// inorder
+console.log("\nINORDER TRAVERSAL");
+deleteTest.inorderTraversal(call);
+deleteTest.prettyPrint(deleteTest.root);
+// postorder
+console.log("\nPOSTORDER TRAVERSAL");
+deleteTest.postorderTraversal(call);
 deleteTest.prettyPrint(deleteTest.root);
