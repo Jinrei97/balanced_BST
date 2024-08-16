@@ -83,7 +83,7 @@ class Tree {
     if (arr.length === 1) {
       return new Node(arr[middle][0], null, null, arr[middle][1]);
     } else if (arr.length === 0) {
-      return new Node(null, null, null);
+      return null;
     } else {
       console.log("inner array:", arr[middle]);
       let [middleValue, occurrences] = arr[middle];
@@ -134,6 +134,75 @@ class Tree {
       }
     });
   };
+
+  swapNodes = (tree, prev) => {
+    let tempData = tree.data;
+    let tempOcc = tree.occurrences;
+    tree.data = prev.data;
+    tree.occurrences = prev.occurrences;
+    prev.data = tempData;
+    prev.occurrences = tempOcc;
+  };
+
+  findInorderNode = (tree) => {
+    let prev = tree;
+    let right = tree.right;
+    while (right) {
+      right = right.right;
+      prev = prev.right;
+    }
+    return prev;
+  };
+
+  deleteItem = (value, tree = this.root, prev = tree) => {
+    console.log("prev: ", prev);
+    console.log("tree: ", tree);
+
+    if (!tree) {
+      alert("value doesn't exist");
+    }
+    if (value === tree.data) {
+      if (!tree.left && !tree.right) {
+        if (prev.left === tree) {
+          prev.left = null;
+        } else {
+          prev.right = null;
+        }
+      } else if ((tree.left && !tree.right) || (!tree.left && tree.right)) {
+        let child = tree.left ? tree.left : tree.right;
+        console.log("child:", child);
+        this.swapNodes(tree, child);
+        this.prettyPrint(prev);
+        this.deleteItem(child.data, child, tree);
+      } else {
+        let left = tree.left;
+        let right = tree.right;
+        console.log("left: ", left);
+        console.log("right: ", right);
+        if (!(prev === tree)) {
+          if (left.right) {
+            const inorderNode = this.findInorderNode(tree.left);
+            console.log("INORDER: ", inorderNode);
+            this.swapNodes(tree, inorderNode);
+            this.prettyPrint(prev);
+            this.deleteItem(value, left, tree);
+          } else {
+            this.swapNodes(tree, left);
+            this.prettyPrint(prev);
+            this.deleteItem(left.data, left, tree);
+          }
+        } else {
+          this.swapNodes(tree, left);
+          this.prettyPrint(prev);
+          this.deleteItem(left.data, left, tree);
+        }
+      }
+    } else if (value < tree.data) {
+      this.deleteItem(value, tree.left, tree);
+    } else {
+      this.deleteItem(value, tree.right, tree);
+    }
+  };
 }
 
 //const arr = [2, 3, 1, 7, 6, 4, 5, 0, 10, 15, 26, 0];
@@ -144,3 +213,25 @@ console.log(test);
 test.insert(20);
 test.insert(4);
 test.prettyPrint(test.root);
+
+const deleteArr = [
+  20, 40, 50, 30, 60, 70, 80, 100, 80, 25, 40, 60, 80, 15, 55, 75, 26,
+];
+const deleteTest = new Tree(deleteArr);
+console.log("\nDELETE TESTS:");
+// delete leaf
+console.log("leaf:");
+deleteTest.deleteItem(20);
+deleteTest.prettyPrint(deleteTest.root);
+// delete with 2 children
+console.log("2 children");
+deleteTest.deleteItem(70);
+deleteTest.prettyPrint(deleteTest.root);
+// delete with 1 child
+console.log("1 child");
+deleteTest.deleteItem(60);
+deleteTest.prettyPrint(deleteTest.root);
+// delete root
+console.log("root");
+deleteTest.deleteItem(50);
+deleteTest.prettyPrint(deleteTest.root);
