@@ -18,7 +18,7 @@ export class Tree {
     console.log(this.root);
     this.prettyPrint(this.root);
   }
-  prettyPrint = (node, prefix = "", isLeft = true) => {
+  prettyPrint = (node = this.root, prefix = "", isLeft = true) => {
     if (node === null) {
       return;
     }
@@ -320,22 +320,33 @@ export class Tree {
     if (result) {
       let condition = null;
       if (!node.left && !node.right) {
-        //console.log("LEAF");
         condition = true;
       } else if (node.left && !node.right) {
-        //console.log("LEFT");
         condition = this.isBalanced(node.left);
       } else if (!node.left && node.right) {
-        //console.log("RIGHT");
         condition = this.isBalanced(node.right);
       } else {
-        //console.log("BOTH");
         condition = this.isBalanced(node.left) && this.isBalanced(node.right);
       }
       //console.log("test result: ", condition, "\nnode: ", node);
       return condition;
     } else {
       return false;
+    }
+  };
+
+  rebalance = (tree = this.root) => {
+    if (!this.isBalanced()) {
+      const orderedArray = [];
+      const f = (node) => {
+        if (node.left) f(node.left);
+        orderedArray.push([node.data, node.occurrences]);
+        if (node.right) f(node.right);
+      };
+      f(tree);
+      this.root = this.buildTree(orderedArray);
+    } else {
+      console.log("it was already balanced");
     }
   };
 }

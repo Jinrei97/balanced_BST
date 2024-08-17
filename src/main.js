@@ -91,3 +91,13 @@ const balancedArray = [
 ];
 const balanced = new Tree(balancedArray);
 console.log("isBalanced", balanced.isBalanced());
+
+console.log("\n\nREBALANCING:");
+deleteTest.prettyPrint();
+console.log("deleteTest: ");
+deleteTest.rebalance();
+deleteTest.prettyPrint();
+balanced.prettyPrint();
+console.log("\nbalanced: ");
+balanced.rebalance();
+balanced.prettyPrint();
