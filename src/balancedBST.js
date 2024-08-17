@@ -1,4 +1,4 @@
-class Node {
+export class Node {
   constructor(data, left, right, occurrences = 1) {
     this.data = data;
     this.occurrences = data ? occurrences : null;
@@ -7,17 +7,15 @@ class Node {
   }
 }
 
-class Tree {
+export class Tree {
   constructor(arr) {
     this.arr = arr;
     this.sorted = this.mergeSort(arr);
     this.sortedOccurrences = this.getOccurrences(this.sorted);
 
     console.log(this.sortedOccurrences);
-    console.log(this.sortedOccurrences[0][0]);
-    console.log(typeof this.sortedOccurrences[0][0]);
-
     this.root = this.buildTree(this.sortedOccurrences);
+    console.log(this.root);
     this.prettyPrint(this.root);
   }
   prettyPrint = (node, prefix = "", isLeft = true) => {
@@ -67,7 +65,6 @@ class Tree {
   // note: this uses the array with the number of duplicates
   // it's an array of arrays
   buildTree = (arr) => {
-    console.log(arr);
     let middle = Math.floor((arr.length - 1) / 2);
     let tree = null;
 
@@ -76,11 +73,11 @@ class Tree {
     } else if (arr.length === 0) {
       return null;
     } else {
-      console.log("inner array:", arr[middle]);
+      //console.log("inner array:", arr[middle]);
       let [middleValue, occurrences] = arr[middle];
       let left = this.buildTree(arr.slice(0, middle));
       let right = this.buildTree(arr.slice(middle + 1));
-      console.log("left", left, "right", right);
+      //console.log("left", left, "right", right);
       tree = new Node(middleValue, left, right, occurrences);
       return tree;
     }
@@ -307,85 +304,38 @@ class Tree {
     }
     return h;
   };
+
+  isBalanced = (node = this.root) => {
+    const f = (node) => {
+      if (node) {
+        let left = node.left ? this.height(node.left) : 0;
+        let right = node.right ? this.height(node.right) : 0;
+        return Math.abs(left - right) <= 1;
+      } else {
+        return true;
+      }
+    };
+    const result = f(node);
+    //console.log("node: ", node, "balanced Node: ", result);
+    if (result) {
+      let condition = null;
+      if (!node.left && !node.right) {
+        //console.log("LEAF");
+        condition = true;
+      } else if (node.left && !node.right) {
+        //console.log("LEFT");
+        condition = this.isBalanced(node.left);
+      } else if (!node.left && node.right) {
+        //console.log("RIGHT");
+        condition = this.isBalanced(node.right);
+      } else {
+        //console.log("BOTH");
+        condition = this.isBalanced(node.left) && this.isBalanced(node.right);
+      }
+      //console.log("test result: ", condition, "\nnode: ", node);
+      return condition;
+    } else {
+      return false;
+    }
+  };
 }
-
-//const arr = [2, 3, 1, 7, 6, 4, 5, 0, 10, 15, 26, 0];
-const arr = [4, 15, 3, 8, 5, 15, 26, 7, 0, 9, 6, 4];
-const test = new Tree(arr);
-console.log(test);
-
-test.insert(20);
-test.insert(4);
-test.prettyPrint(test.root);
-
-const deleteArr = [
-  20, 40, 50, 30, 60, 70, 80, 100, 80, 25, 40, 60, 80, 15, 55, 75, 26,
-];
-const deleteTest = new Tree(deleteArr);
-console.log("\nDELETE TESTS:");
-// delete leaf
-console.log("leaf:");
-deleteTest.deleteItem(20);
-// delete with 2 children
-console.log("2 children");
-deleteTest.deleteItem(70);
-// delete with 1 child
-console.log("1 child");
-deleteTest.deleteItem(60);
-// delete root
-console.log("root");
-deleteTest.deleteItem(50);
-deleteTest.prettyPrint(deleteTest.root);
-
-// find test
-console.log("\nFIND TESTS");
-console.log(deleteTest.find(100));
-console.log(deleteTest.find(25));
-console.log(deleteTest.find(30));
-console.log(deleteTest.find(55));
-console.log(deleteTest.find(75));
-console.log(deleteTest.find(40));
-
-// levelOrderTraversal
-console.log("\nLEVEL ORDER TRAVERSAL");
-const call = (node) => (node.data += 1);
-deleteTest.levelOrderTraversal(call);
-deleteTest.prettyPrint(deleteTest.root);
-// recursive
-deleteTest.levelOrderTraversalRecursive(call);
-deleteTest.prettyPrint(deleteTest.root);
-// preorder
-console.log("\nPREORDER TRAVERSAL");
-deleteTest.preorderTraversal(call);
-deleteTest.prettyPrint(deleteTest.root);
-// inorder
-console.log("\nINORDER TRAVERSAL");
-deleteTest.inorderTraversal(call);
-deleteTest.prettyPrint(deleteTest.root);
-// postorder
-console.log("\nPOSTORDER TRAVERSAL");
-deleteTest.postorderTraversal(call);
-deleteTest.prettyPrint(deleteTest.root);
-
-deleteTest.insert(75);
-deleteTest.prettyPrint(deleteTest.root);
-
-// height
-console.log("\nHEIGHT TEST");
-console.log(deleteTest.root);
-console.log(deleteTest.find(45));
-console.log("height node 45: ", deleteTest.height(deleteTest.find(45)));
-console.log("height node 55: ", deleteTest.height(deleteTest.find(55)));
-console.log("height node 105: ", deleteTest.height(deleteTest.find(105)));
-console.log("height node 31: ", deleteTest.height(deleteTest.find(31)));
-console.log("height node 60: ", deleteTest.height(deleteTest.find(60)));
-
-// depth
-console.log("\nDEPTH TEST");
-console.log(deleteTest.root);
-console.log(deleteTest.find(45));
-console.log("depth node 45: ", deleteTest.depth(deleteTest.find(45)));
-console.log("depth node 55: ", deleteTest.depth(deleteTest.find(55)));
-console.log("depth node 105: ", deleteTest.depth(deleteTest.find(105)));
-console.log("depth node 31: ", deleteTest.depth(deleteTest.find(31)));
-console.log("depth node 60: ", deleteTest.depth(deleteTest.find(60)));
