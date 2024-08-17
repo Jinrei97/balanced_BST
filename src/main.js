@@ -1,5 +1,11 @@
 import { Node, Tree } from "./balancedBST.js";
 
+function* generateNumber(top, toGen) {
+  for (let i = 0; i < toGen; i++) {
+    yield Math.floor(Math.random() * top);
+  }
+}
+
 //const arr = [2, 3, 1, 7, 6, 4, 5, 0, 10, 15, 26, 0];
 const arr = [4, 15, 3, 8, 5, 15, 26, 7, 0, 9, 6, 4];
 const test = new Tree(arr);
@@ -101,3 +107,38 @@ balanced.prettyPrint();
 console.log("\nbalanced: ");
 balanced.rebalance();
 balanced.prettyPrint();
+
+////////////////
+console.log("\n\nLAST TESTS:");
+const lastArray = [];
+for (let i of generateNumber(100, 20)) {
+  lastArray.push(i);
+}
+const lastTree = new Tree(lastArray);
+console.log("Balanced? ", lastTree.isBalanced());
+console.log("\nTRAVERSALS: (commented out to save space)");
+console.log("level-order:");
+//lastTree.levelOrderTraversal(console.log);
+console.log("preOrder:");
+//lastTree.preorderTraversal(console.log);
+console.log("inOrder:");
+//lastTree.inorderTraversal(console.log);
+console.log("postOrder");
+//lastTree.postorderTraversal(console.log);
+for (let i of generateNumber(200, 10)) {
+  lastTree.insert(i);
+}
+lastTree.prettyPrint();
+console.log("Balanced? ", lastTree.isBalanced());
+lastTree.rebalance();
+lastTree.prettyPrint();
+console.log("Balanced? ", lastTree.isBalanced());
+console.log("\nTRAVERSALS:");
+console.log("level-order:");
+//lastTree.levelOrderTraversal(console.log);
+console.log("preOrder:");
+//lastTree.preorderTraversal(console.log);
+console.log("inOrder:");
+//lastTree.inorderTraversal(console.log);
+console.log("postOrder");
+//lastTree.postorderTraversal(console.log);

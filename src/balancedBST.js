@@ -49,7 +49,7 @@ export class Tree {
   mergeSortMergeHalves = (left, right) => {
     let sorted = [];
     let i = 0;
-    while (i < 20 && (left.length > 0 || right.length > 0)) {
+    while (left.length > 0 || right.length > 0) {
       if (left.length > 0 && right.length > 0) {
         sorted.push(left[0] < right[0] ? left.shift() : right.shift());
       } else if (left.length === 0) {
@@ -100,7 +100,6 @@ export class Tree {
     let subtree = this.root;
     let directions = [];
     while (subtree) {
-      console.log("subtree: ", subtree);
       if (subtree.data === value) {
         subtree.occurrences += 1;
         return;
@@ -243,7 +242,6 @@ export class Tree {
       return;
     }
     const f = (node) => {
-      console.log(node);
       callback(node);
       if (node.left) f(node.left);
       if (node.right) f(node.right);
@@ -257,7 +255,6 @@ export class Tree {
     }
     const f = (node) => {
       if (node.left) f(node.left);
-      console.log(node);
       callback(node);
       if (node.right) f(node.right);
     };
@@ -271,7 +268,6 @@ export class Tree {
     const f = (node) => {
       if (node.left) f(node.left);
       if (node.right) f(node.right);
-      console.log(node);
       callback(node);
     };
     f(this.root);
